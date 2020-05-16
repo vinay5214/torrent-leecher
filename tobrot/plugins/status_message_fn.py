@@ -31,8 +31,7 @@ async def status_message_f(client, message):
         # Show All Downloads
         downloads = aria_i_p.get_downloads()
         #
-        DOWNLOAD_ICON = "📥"
-        UPLOAD_ICON = "📤"
+        DOWNLOAD_ICON = "⏬"
         #
         msg = ""
         for download in downloads:
@@ -44,27 +43,26 @@ async def status_message_f(client, message):
             total_length_size = str(download.total_length_string())
             progress_percent_string = str(download.progress_string())
             down_speed_string = str(download.download_speed_string())
-            up_speed_string = str(download.upload_speed_string())
+            no_of_connections = str(download.connections)
+
+            if download.seeder is None:
+               no_of_seeds = 0
+            else:
+               no_of_seeds = str(download.num_seeders)
+
             download_current_status = str(download.status)
             e_t_a = str(download.eta_string())
             current_gid = str(download.gid)
             #
-            msg += f"<u>{downloading_dir_name}</u>"
-            msg += " | "
-            msg += f"{total_length_size}"
-            msg += " | "
-            msg += f"{progress_percent_string}"
-            msg += " | "
-            msg += f"{DOWNLOAD_ICON} {down_speed_string}"
-            msg += " | "
-            msg += f"{UPLOAD_ICON} {up_speed_string}"
-            msg += " | "
-            msg += f"{e_t_a}"
-            msg += " | "
-            msg += f"{download_current_status}"
-            msg += " | "
-            msg += f"<code>/cancel {current_gid}</code>"
-            msg += " | "
+            msg += f"<u>{downloading_dir_name}</u> | "\
+                    f"{total_length_size} | "\
+                    f"{progress_percent_string} | "\
+                    f"{DOWNLOAD_ICON} {down_speed_string} | "\
+                    f"<b>C:{no_of_connections}</b> | "\
+                    f"<b>S:{no_of_seeds}</b> | "\
+                    f"{e_t_a} | "\
+                    f"{download_current_status}"
+            msg += f"\n<code>/cancel {current_gid}</code>"
             msg += "\n\n"
         LOGGER.info(msg)
         if msg == "":

@@ -15,7 +15,7 @@ import os
 import re
 
 
-MAGNETIC_LINK_REGEX = r"magnet\:\?xt\=urn\:btih\:([A-F\d]+)"
+MAGNETIC_LINK_REGEX = r"magnet\:\?xt\=urn\:btih\:([a-zA-Z0-9]+)"
 
 
 def extract_info_hash_from_ml(magnetic_link):

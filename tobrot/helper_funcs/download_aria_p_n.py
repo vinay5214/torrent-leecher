@@ -188,14 +188,10 @@ async def call_apropriate_function(
         message_id = final_response[key_f_res_se]
         channel_id = str(AUTH_CHANNEL)[4:]
         private_link = f"https://t.me/c/{channel_id}/{message_id}"
-        message_to_send += "👉 <a href='"
-        message_to_send += private_link
-        message_to_send += "'>"
-        message_to_send += local_file_name
-        message_to_send += "</a>"
+        message_to_send += "👉 <a href='" + private_link + "'>" + local_file_name + "</a>"
         message_to_send += "\n"
     if message_to_send != "":
-        mention_req_user = f"<a href='tg://user?id={user_id}'>Your Requested Files</a>\n\n"
+        mention_req_user = f"<a href='tg://user?id={user_id}'>Downloaded Files</a>\n\n"
         message_to_send = mention_req_user + message_to_send
         message_to_send = message_to_send + "\n\n" + "#uploads"
     else:
@@ -213,7 +209,6 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
     try:
         file = aria2.get_download(gid)
         complete = file.is_complete
-        is_file = file.seeder
         if not complete:
             if not file.error_message:
                 msg = ""
@@ -228,18 +223,16 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 except:
                     pass
                 #
-                msg = f"\nDownloading File: `{downloading_dir_name}`"
-                msg += f"\nSpeed: {file.download_speed_string()} 🔽 / {file.upload_speed_string()} 🔼"
-                msg += f"\nProgress: {file.progress_string()}"
-                msg += f"\nTotal Size: {file.total_length_string()}"
-
-                if is_file is None :
-                   msg += f"\n<b>Connections:</b> {file.connections}"
+                msg = f"\n<b>Downloading...</b> \n<i>{downloading_dir_name}</i>"
+                msg += f"\nProgress: {file.progress_string()} of "\
+                        f"<b>{file.total_length_string()}</b> at "\
+                        f"{file.download_speed_string()}, "\
+                        f"ETA: {file.eta_string()}\n"
+                if file.seeder is None :
+                   msg += f"<b>Connections:{file.connections}</b>"
                 else :
-                   msg += f"\n<b>Info:</b>[ P : {file.connections} || S : {file.num_seeders} ]"
-
-                # msg += f"\nStatus: {file.status}"
-                msg += f"\nETA: {file.eta_string()}"
+                   msg += f"| <b>P:{file.connections}</b> "\
+                           f"| <b>S:</b>{file.num_seeders}</b> |"
                 msg += f"\n<code>/cancel {gid}</code>"
                 # LOGGER.info(msg)
                 if msg != previous_message:
