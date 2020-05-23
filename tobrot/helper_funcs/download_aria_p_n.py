@@ -41,8 +41,8 @@ async def aria_start():
     # but for now, https://t.me/TrollVoiceBot?start=858
     #
     # added support for external config file
-    # now located at /ariac/aria2.conf
-    aria2_daemon_start_cmd.append("--conf-path=/app/ariac/aria2.conf")
+    # now located at /usr/src/ariac/aria2.conf
+    aria2_daemon_start_cmd.append("--conf-path=/usr/src/app/ariac/aria2.conf")
     #
     LOGGER.info(aria2_daemon_start_cmd)
     #
