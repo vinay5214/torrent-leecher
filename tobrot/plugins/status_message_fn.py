@@ -64,7 +64,7 @@ async def status_message_f(client, message):
                     f"{download_current_status}"
             msg += f"\n<code>/cancel {current_gid}</code>"
             msg += "\n\n"
-        LOGGER.info(msg)
+        # LOGGER.info(msg)
         if msg == "":
             msg = "🤷‍♂️ No Active, Queued or Paused TORRENTs"
         await message.reply_text(msg, quote=True)
