@@ -6,7 +6,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 RUN apt update && apt upgrade -y && \
     apt install --no-install-recommends -y \
     wget curl \
-    aria2 ffmpeg \
+    aria2 ffmpeg rclone \
     coreutils bash procps \
     linux-headers-amd64 pv jq \
     && rm -rf /var/lib/apt/lists/*
