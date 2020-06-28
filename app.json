@@ -70,6 +70,10 @@
     "TG_OFFENSIVE_API": {
       "description": "should be an URL accepting the FormParams {i}, {m}, and {t}",
       "required": false
+    },
+    "R_CLONE_CONF_URI": {
+      "description": "should be a Telegram URL",
+      "required": false
     }
   },
   "formation": {
