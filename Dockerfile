@@ -7,8 +7,7 @@ RUN apt update && apt upgrade -y && \
     apt install --no-install-recommends -y \
     wget curl \
     aria2 ffmpeg rclone \
-    coreutils bash procps \
-    linux-headers-amd64 pv jq \
+    bash procps \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . /usr/src/app
