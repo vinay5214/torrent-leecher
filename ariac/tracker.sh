@@ -1,13 +1,15 @@
-#!/bin/bash
-#==============================================
+#!/usr/bin/env bash
+#
+# Copyright (c) 2018-2020 P3TERX <https://p3terx.com>
+#
+# This is free software, licensed under the MIT License.
+# See /LICENSE for more information.
+#
 # https://github.com/P3TERX/aria2.conf
 # File name：tracker.sh
 # Description: Get BT trackers and add to Aria2
-# Lisence: MIT
-# Version: 2.2
-# Author: P3TERX
-# Blog: https://p3terx.com
-#==============================================
+# Version: 2.3
+#
 
 RED_FONT_PREFIX="\033[31m"
 GREEN_FONT_PREFIX="\033[32m"
@@ -17,6 +19,7 @@ FONT_COLOR_SUFFIX="\033[0m"
 INFO="[${GREEN_FONT_PREFIX}INFO${FONT_COLOR_SUFFIX}]"
 ERROR="[${RED_FONT_PREFIX}ERROR${FONT_COLOR_SUFFIX}]"
 ARIA2_CONF=${1:-/usr/src/app/ariac/aria2.conf}
+DOWNLOADER="curl -fsSL --connect-timeout 3 --max-time 3 --retry 1"
 
 # BT tracker is provided by the following project.
 # https://github.com/XIU2/TrackersListCollection
@@ -27,18 +30,23 @@ ARIA2_CONF=${1:-/usr/src/app/ariac/aria2.conf}
 GET_TRACKERS() {
     echo && echo -e "$(date +"%m/%d %H:%M:%S") ${INFO} Get BT trackers ..."
     TRACKER=$(
-        curl -fsSL https://trackerslist.com/best_aria2.txt ||
-            curl -fsSL https://cdn.jsdelivr.net/gh/XIU2/TrackersListCollection/best_aria2.txt ||
-            curl -fsSL https://trackerslist.p3terx.workers.dev/best_aria2.txt ||
-            {
-                curl -fsSL https://ngosang.github.io/trackerslist/trackers_best.txt ||
-                curl -fsSL https://cdn.jsdelivr.net/gh/ngosang/trackerslist/trackers_best.txt ||
-                    curl -fsSL https://ngosang-trackerslist.p3terx.workers.dev/trackers_best.txt
-            } | awk NF | sed ":a;N;s/\n/,/g;ta"
+        ${DOWNLOADER} https://trackerslist.com/best_aria2.txt ||
+            ${DOWNLOADER} https://cdn.jsdelivr.net/gh/XIU2/TrackersListCollection/best_aria2.txt ||
+            ${DOWNLOADER} https://trackerslist.p3terx.workers.dev/best_aria2.txt
     )
     [ -z ${TRACKER} ] && {
-        echo
-        echo -e "$(date +"%m/%d %H:%M:%S") ${ERROR} Unable to get trackers, network failure or invalid links." && exit 1
+        TRACKER2=$(
+            {
+                ${DOWNLOADER} https://ngosang.github.io/trackerslist/trackers_best.txt ||
+                    ${DOWNLOADER} https://cdn.jsdelivr.net/gh/ngosang/trackerslist/trackers_best.txt
+            } | awk NF | sed ":a;N;s/\n/,/g;ta"
+        )
+        [ -z ${TRACKER2} ] && {
+            echo
+            echo -e "$(date +"%m/%d %H:%M:%S") ${ERROR} Unable to get trackers, network failure or invalid links." && exit 1
+        } || {
+            TRACKER="$TRACKER2"
+        }
     }
 }
 
