@@ -23,6 +23,7 @@ from tobrot import (
 from tobrot.helper_funcs.admin_check import AdminCheck
 from tobrot.helper_funcs.download_aria_p_n import call_apropriate_function, aria_start
 from tobrot.helper_funcs.upload_to_tg import upload_to_tg
+from tobrot.dinmamoc import Commandi
 
 
 async def status_message_f(client, message):
@@ -46,22 +47,22 @@ async def status_message_f(client, message):
             no_of_connections = str(download.connections)
 
             if download.seeder is None:
-               no_of_seeds = 0
+                no_of_seeds = 0
             else:
-               no_of_seeds = str(download.num_seeders)
+                no_of_seeds = str(download.num_seeders)
 
             download_current_status = str(download.status)
             e_t_a = str(download.eta_string())
             current_gid = str(download.gid)
             #
             msg += f"<u>{downloading_dir_name}</u> | "\
-                    f"{total_length_size} | "\
-                    f"{progress_percent_string} | "\
-                    f"{DOWNLOAD_ICON} {down_speed_string} | "\
-                    f"<b>C:{no_of_connections}</b> | "\
-                    f"<b>S:{no_of_seeds}</b> | "\
-                    f"{e_t_a} | "\
-                    f"{download_current_status}"
+                f"{total_length_size} | "\
+                f"{progress_percent_string} | "\
+                f"{DOWNLOAD_ICON} {down_speed_string} | "\
+                f"<b>C:{no_of_connections}</b> | "\
+                f"<b>S:{no_of_seeds}</b> | "\
+                f"{e_t_a} | "\
+                f"{download_current_status}"
             msg += f"\n<code>/cancel {current_gid}</code>"
             msg += "\n\n"
         # LOGGER.info(msg)

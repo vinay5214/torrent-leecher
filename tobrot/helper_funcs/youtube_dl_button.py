@@ -85,6 +85,9 @@ async def youtube_dl_call_back(bot, update):
     if "fulltitle" in response_json:
         description = response_json["fulltitle"][0:1021]
         # escape Markdown and special characters
+    if "description" in response_json:
+        description = response_json["description"][0:1021]
+    LOGGER.info(description)
     #
     tmp_directory_for_each_user = os.path.join(
         DOWNLOAD_LOCATION,
@@ -174,7 +177,8 @@ async def youtube_dl_call_back(bot, update):
             tmp_directory_for_each_user,
             user_id,
             {},
-            True
+            True,
+            description
         )
         LOGGER.info(final_response)
         #

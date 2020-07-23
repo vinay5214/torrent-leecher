@@ -89,7 +89,7 @@ def add_magnet(aria_instance, magnetic_link, c_file_name):
 
 def add_torrent(aria_instance, torrent_file_path):
     if torrent_file_path is None:
-        return False, "**FAILED** \n" + str(e) + " \nsomething wrongings when trying to add <u>TORRENT</u> file"
+        return False, "**FAILED** \n\nsomething wrongings when trying to add <u>TORRENT</u> file"
     if os.path.exists(torrent_file_path):
         # Add Torrent Into Queue
         try:
@@ -172,7 +172,7 @@ async def fake_etairporpa_call(
         R_CLONE_CONF_URI,
         sent_message_to_update_tg_p._client
     )
-    if r_clone_conf_file is not None: # how? even :\
+    if r_clone_conf_file is not None:  # how? even :\
         config = configparser.ConfigParser()
         config.read(r_clone_conf_file)
         remote_names = config.sections()
@@ -183,7 +183,7 @@ async def fake_etairporpa_call(
         await copy_via_rclone(
             to_upload_file,
             required_remote,
-            "/", # assuming '/' is the default location for uploads
+            "/",  # assuming '/' is the default location for uploads
             r_clone_conf_file
         )
         await sent_message_to_update_tg_p.reply_text(
@@ -295,13 +295,13 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 #
                 msg = f"\n<b>Downloading...</b> \n<i>{downloading_dir_name}</i>"
                 msg += f"\nProgress: {file.progress_string()} of "\
-                        f"<b>{file.total_length_string()}</b> at "\
-                        f"{file.download_speed_string()}, "\
-                        f"ETA: {file.eta_string()}\n"
-                if file.seeder is None :
-                   msg += f"<b>Connections:{file.connections}</b>"
-                else :
-                   msg += f"| <b>P:{file.connections}</b> "\
+                    f"<b>{file.total_length_string()}</b> at "\
+                    f"{file.download_speed_string()}, "\
+                    f"ETA: {file.eta_string()}\n"
+                if file.seeder is None:
+                    msg += f"<b>Connections:{file.connections}</b>"
+                else:
+                    msg += f"| <b>P:{file.connections}</b> "\
                            f"| <b>S:{file.num_seeders}</b> |"
                 msg += f"\n<code>/cancel {gid}</code>"
                 # LOGGER.info(msg)
@@ -315,20 +315,20 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
             await asyncio.sleep(EDIT_SLEEP_TIME_OUT)
             await check_progress_for_dl(aria2, gid, event, previous_message)
         else:
-            await event.edit(f"File Downloaded Successfully: `{file.name}`")
+            await event.edit(f"File Downloaded Successfully: <code>{file.name}</code>")
             return True
     except Exception as e:
         LOGGER.info(str(e))
         if " not found" in str(e) or "'file'" in str(e):
-            await event.edit("Download Canceled :\n`{}`".format(file.name))
+            await event.edit("Download Canceled :\n<code>{}</code>".format(file.name))
             return False
         elif " depth exceeded" in str(e):
             file.remove(force=True)
-            await event.edit("Download Auto Canceled :\n`{}`\nYour Torrent/Link is Dead.".format(file.name))
+            await event.edit("Download Auto Canceled :\n<code>{}</code>\nYour Torrent/Link is Dead.".format(file.name))
             return False
         else:
             LOGGER.info(str(e))
-            await event.edit("<u>error</u> :\n`{}` \n\n#error".format(str(e)))
+            await event.edit("<u>error</u> :\n<code>{}</code> \n\n#error".format(str(e)))
             return
 # https://github.com/jaskaranSM/UniBorg/blob/6d35cf452bce1204613929d4da7530058785b6b1/stdplugins/aria.py#L136-L164
 
