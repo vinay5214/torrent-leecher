@@ -46,7 +46,11 @@ async def copy_via_rclone(
         "move",
         src,
         "" + remote_name + ":" + remote_dir + "",
-        "--config=" + conf_file + ""
+        "--config=" + conf_file + "",
+        "--fast-list",
+        "--transfers", "18",
+        "--checkers", "10",
+        "--drive-chunk-size", "64M"
     ]
     LOGGER.info(command_to_exec)
     process = await asyncio.create_subprocess_exec(
