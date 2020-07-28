@@ -1,6 +1,6 @@
-# ~~Telegram~~ Torrent / YouTube Leecher 🔥🤖
+# Torrent / YouTube Leecher 🔥🤖
 
-A Torrent, youtube-dl Leecher, and rClone / Telegram Uploader!
+A Torrent, youtube-dl Leecher, and Uploader!
 
 ## installing
 
@@ -36,7 +36,11 @@ class Config(Config):
     API_HASH = "eb06d4abfb49dc3eeb1aeb98ae0f581e"
     # please read https://t.me/c/1279877202/74
     # if you have not read the above README
-    AUTH_CHANNEL = [-1001234567890]
+    AUTH_CHANNEL = [
+        -1001234567890,
+        7351948,
+        -456790
+    ]
 ```
 
 ### Variable Explanations
@@ -55,6 +59,23 @@ You can add multiple IDs seperated by space.
 
 ##### Optional Configuration Variables
 
+* `SHOULD_USE_BUTTONS`: because, [BlameTelegram](https://t.me/c/1494623325/5603)
+
+* `ARIA_TWO_STARTED_PORT`: The port on which aria2c daemon must START. This should be an integer, between 1001 and 65535.
+
+* `EDIT_SLEEP_TIME_OUT`: The number of seconds to sleep after editing a Telegram message.
+
+* `MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START`: The number of seconds to wait before auto-cancelling a dead link.
+
+* `FINISHED_PROGRESS_STR`: any character(s) that might be displayed in the progress string.
+
+* `UN_FINISHED_PROGRESS_STR`: any character(s) that might be displayed in the progress string.
+
+* `TG_OFFENSIVE_API`: ~~DO NOT USE THIS~~.
+
+* `R_CLONE_CONF_URI`:
+![a help, maybe](https://telegra.ph/file/073bcbc0b69b03d75ea04.jpg)
+
 * `DOWNLOAD_LOCATION`: optional download directory, where the temporary downloads should ideally reside.
 
 * `MAX_FILE_SIZE`: The maximum file_size allowed by Telegram [BOT API](https://core.telegram.org/bots/api), kept for [legacy purposes](https://t.me/c/1235155926/33801).
@@ -71,24 +92,12 @@ You can add multiple IDs seperated by space.
 
 * `PROCESS_MAX_TIMEOUT`: ~~not used~~, kept for [legacy purposes](https://t.me/c/1235155926/33801).
 
-* `ARIA_TWO_STARTED_PORT`: The port on which aria2c daemon must START.
-
-* `EDIT_SLEEP_TIME_OUT`: The number of seconds to sleep after editing a Telegram message.
-
-* `MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START`: The number of seconds to wait before auto-cancelling a dead link.
-
-* `FINISHED_PROGRESS_STR`: any character(s) that might be displayed in the progress string.
-
-* `UN_FINISHED_PROGRESS_STR`: any character(s) that might be displayed in the progress string.
-
-* `TG_OFFENSIVE_API`: ~~DO NOT USE THIS~~.
-
-* `R_CLONE_CONF_URI`:
-![a help, maybe](https://telegra.ph/file/073bcbc0b69b03d75ea04.jpg)
 
 ## Available Commands
 
-* No Commands. 👉 BUTTONS better 👈
+* The available commands depends on the ENVironment / CONfig variables that is set by you.
+* You can read the [Commandi](./tobrot/dinmamoc.py) file, to know about the ENVironment variables to use.
+
 
 ## How to Use?
 
@@ -100,15 +109,27 @@ You can add multiple IDs seperated by space.
 * if file is a TAR archive, [read this](https://t.me/c/1434259219/104) to know how to uncompress.
 
 
+## How to get `R_CLONE_CONF_URI` ?
+
+- Start the RoBot by leaving the var empty.
+- Create a rclone.conf by going to the [official website](https://rclone.org/)
+- Upload the rclone.conf, in your private chat / channel**.
+- Reply the `GET_RCLONE_CONF_URI` Commandi, to the uploaded file.
+- RoBot will reply a monospaced text.
+- Add it to the `R_CLONE_CONF_URI` ENVironment VARiable.
+
+
 ## Issues or Feature Requests
 
 * search for known issues, [here](https://t.me/c/1434259219/118) or in the [GitHub Issues](https://github.com/SpEcHiDe/PublicLeech/issues).
 
 * add issues / feature requests, [here](https://github.com/SpEcHiDe/PublicLeech/issues/new).
 
+* the GitHub Issue Tracker is only for Issue / Feature Requests. For any support, please use the Telegram Group.
 
 ## Credits, and Thanks to
 
+* [me](https://GitHub.com/SpEcHIDe/PublicLeech)
 * [Dan Tès](https://telegram.dog/haskell) for his [Pyrogram Library](https://github.com/pyrogram/pyrogram)
 * [Robots](https://telegram.dog/Robots) for their [@UploadBot](https://telegram.dog/UploadBot)
 * [@AjeeshNair](https://telegram.dog/AjeeshNait) for his [torrent.ajee.sh](https://torrent.ajee.sh)
