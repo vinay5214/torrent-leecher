@@ -1,18 +1,16 @@
 FROM python:3.8.5-slim-buster
 
-ENV PIP_NO_CACHE_DIR 1
-
-ARG DEBIAN_FRONTEND=noninteractive
+COPY requirements.txt /app/requirements.txt
 RUN apt update && apt upgrade -y && \
     apt install --no-install-recommends -y \
     wget curl \
     aria2 ffmpeg rclone \
     bash procps git \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && pip3 install --no-cache-dir --upgrade -r requirements.txt
 
-COPY . /usr/src/app
-WORKDIR /usr/src/app/
+COPY tobrot /app/tobrot
+COPY ariac /app/ariac
+WORKDIR /app
 
-RUN python3 -m pip install --no-cache-dir --upgrade -r requirements.txt
-
-CMD ["python3", "-m", "tobrot"]
+ENTRYPOINT ["python3", "-m", "tobrot"]

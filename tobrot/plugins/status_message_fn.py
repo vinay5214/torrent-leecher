@@ -4,69 +4,97 @@
 
 import asyncio
 import os
+import shutil
 import time
 
 from tobrot import (
+    BOT_START_TIME,
     LOGGER,
+    LOG_FILE_ZZGEVC,
     MAX_MESSAGE_LENGTH
 )
 
 
 from tobrot.helper_funcs.admin_check import AdminCheck
-from tobrot.helper_funcs.download_aria_p_n import call_apropriate_function, aria_start
+from tobrot.helper_funcs.download_aria_p_n import (
+    call_apropriate_function, aria_start
+)
 from tobrot.helper_funcs.upload_to_tg import upload_to_tg
 from tobrot.dinmamoc import Commandi
+from tobrot.amocmadin import Loilacaztion
+from tobrot.helper_funcs.display_progress import (
+    TimeFormatter,
+    humanbytes
+)
 
 
 async def status_message_f(client, message):
-    if await AdminCheck(client, message.chat.id, message.from_user.id):
-        aria_i_p = await aria_start()
-        # Show All Downloads
-        downloads = aria_i_p.get_downloads()
+    aria_i_p = await aria_start()
+    # Show All Downloads
+    downloads = aria_i_p.get_downloads()
+    #
+    DOWNLOAD_ICON = "📥"
+    UPLOAD_ICON = "📤"
+    #
+    msg = ""
+    for download in downloads:
+        downloading_dir_name = "NA"
+        try:
+            downloading_dir_name = str(download.name)
+        except:
+            pass
+        total_length_size = str(download.total_length_string())
+        progress_percent_string = str(download.progress_string())
+        down_speed_string = str(download.download_speed_string())
+        up_speed_string = str(download.upload_speed_string())
+        download_current_status = str(download.status)
+        e_t_a = str(download.eta_string())
+        current_gid = str(download.gid)
         #
-        DOWNLOAD_ICON = "⏬"
-        #
-        msg = ""
-        for download in downloads:
-            downloading_dir_name = "NA"
-            try:
-                downloading_dir_name = str(download.name)
-            except:
-                pass
-            total_length_size = str(download.total_length_string())
-            progress_percent_string = str(download.progress_string())
-            down_speed_string = str(download.download_speed_string())
-            no_of_connections = str(download.connections)
+        msg += f"<u>{downloading_dir_name}</u>"
+        msg += " | "
+        msg += f"{total_length_size}"
+        msg += " | "
+        msg += f"{progress_percent_string}"
+        msg += " | "
+        msg += f"{DOWNLOAD_ICON} {down_speed_string}"
+        msg += " | "
+        msg += f"{UPLOAD_ICON} {up_speed_string}"
+        msg += " | "
+        msg += f"{e_t_a}"
+        msg += " | "
+        msg += f"{download_current_status}"
+        msg += " | "
+        msg += f"<code>{Commandi.CANCEL} {current_gid}</code>"
+        msg += " | "
+        msg += "\n\n"
+    LOGGER.info(msg)
 
-            if download.seeder is None:
-                no_of_seeds = 0
-            else:
-                no_of_seeds = str(download.num_seeders)
+    if msg == "":
+        msg = Loilacaztion.NO_TOR_STATUS
 
-            download_current_status = str(download.status)
-            e_t_a = str(download.eta_string())
-            current_gid = str(download.gid)
-            #
-            msg += f"<u>{downloading_dir_name}</u> | "\
-                f"{total_length_size} | "\
-                f"{progress_percent_string} | "\
-                f"{DOWNLOAD_ICON} {down_speed_string} | "\
-                f"<b>C:{no_of_connections}</b> | "\
-                f"<b>S:{no_of_seeds}</b> | "\
-                f"{e_t_a} | "\
-                f"{download_current_status}"
-            msg += f"\n<code>/cancel {current_gid}</code>"
-            msg += "\n\n"
-        # LOGGER.info(msg)
-        if msg == "":
-            msg = "🤷‍♂️ No Active, Queued or Paused TORRENTs"
-        await message.reply_text(msg, quote=True)
+    currentTime = TimeFormatter((time.time() - BOT_START_TIME))
+    total, used, free = shutil.disk_usage(".")
+    total = humanbytes(total)
+    used = humanbytes(used)
+    free = humanbytes(free)
+
+    ms_g = f"<b>Bot Uptime</b>: <code>{currentTime}</code>\n" \
+        f"<b>Total disk space</b>: <code>{total}</code>\n" \
+        f"<b>Used</b>: <code>{used}</code>\n" \
+        f"<b>Free</b>: <code>{free}</code>\n"
+
+    msg = ms_g + "\n" + msg
+    await message.reply_text(msg, quote=True)
 
 
 async def cancel_message_f(client, message):
     if len(message.command) > 1:
         # /cancel command
-        i_m_s_e_g = await message.reply_text("checking..?", quote=True)
+        i_m_s_e_g = await message.reply_text(
+            Loilacaztion.PROCESSING,
+            quote=True
+        )
         aria_i_p = await aria_start()
         g_id = message.command[1].strip()
         LOGGER.info(g_id)
@@ -75,11 +103,12 @@ async def cancel_message_f(client, message):
             LOGGER.info(downloads)
             LOGGER.info(downloads.remove(force=True))
             await i_m_s_e_g.edit_text(
-                "Leech Cancelled"
+                Loilacaztion.TOR_CANCELLED
             )
         except Exception as e:
+            LOGGER.warn(str(e))
             await i_m_s_e_g.edit_text(
-                "<i>FAILED</i>\n\n" + str(e) + "\n#error"
+                Loilacaztion.TOR_CANCEL_FAILED
             )
     else:
         await message.delete()
@@ -131,7 +160,7 @@ async def exec_message_f(client, message):
 
 async def upload_document_f(client, message):
     imsegd = await message.reply_text(
-        "processing ..."
+        Loilacaztion.PROCESSING
     )
     if await AdminCheck(client, message.chat.id, message.from_user.id):
         if " " in message.text:
@@ -162,4 +191,10 @@ async def save_rclone_conf_f(client, message):
         "<code>"
         f"{r_clone_conf_uri}"
         "</code>"
+    )
+
+
+async def upload_log_file(client, message):
+    await message.reply_document(
+        LOG_FILE_ZZGEVC
     )

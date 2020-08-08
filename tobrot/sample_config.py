@@ -55,7 +55,7 @@ class Config(object):
     ))
     MAX_TG_SPLIT_FILE_SIZE = int(get_config(
         "MAX_TG_SPLIT_FILE_SIZE",
-        1072864000
+        1900000000
     ))
     # add config vars for the display progress
     FINISHED_PROGRESS_STR = get_config("FINISHED_PROGRESS_STR", "█")
@@ -66,3 +66,5 @@ class Config(object):
     R_CLONE_CONF_URI = get_config("R_CLONE_CONF_URI", None)
     # because, https://t.me/c/1494623325/5603
     SHOULD_USE_BUTTONS = get_config("SHOULD_USE_BUTTONS", False)
+    # 
+    LOG_FILE_ZZGEVC = get_config("LOG_FILE_ZZGEVC", "PublicLeech.log")
