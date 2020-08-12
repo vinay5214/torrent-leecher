@@ -45,7 +45,7 @@ async def copy_via_rclone(
         "rclone",
         "move",
         src,
-        "" + remote_name + ":" + remote_dir + "",
+        "" + remote_name + ":" + remote_dir + "/" + src + "",
         "--config=" + conf_file + "",
         "--fast-list",
         "--transfers", "18",
