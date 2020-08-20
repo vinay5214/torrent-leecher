@@ -305,16 +305,14 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 #
                 msg = f"\nName: <i>{downloading_dir_name}</i>"
                 status = await check_stat_us(aria2, gid)
-                msg += f"\nStatus: {status}"
+                msg += f"\nStatus: <i>{status}</i>"
                 msg += f"\nProgress: {file.progress_string()} of "\
                     f"<b>{file.total_length_string()}</b> at "\
                     f"{file.download_speed_string()}, "\
                     f"ETA: {file.eta_string()}\n"
-                if file.seeder is None:
-                    msg += f"<b>Connections:{file.connections}</b>"
-                else:
-                    msg += f"| <b>P:{file.connections}</b> "\
-                           f"| <b>S:{file.num_seeders}</b> |"
+                msg += f"<b>C: {file.connections} |</b>"
+                if file.seeder is False:
+                    msg += f"| <b>S: {file.num_seeders}</b>"
                 msg += f"\n<code>/cancel {gid}</code>"
                 # LOGGER.info(msg)
                 if msg != previous_message:
