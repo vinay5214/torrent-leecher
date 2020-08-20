@@ -57,6 +57,11 @@
       "description": "should be an integer. Number of seconds to wait before cancelling a torrent.",
       "required": false
     },
+    "MAX_CONCURRENT_DOWNLOADS": {
+     "description": "maximum number of downloads that should be allowed at same time",
+     "value": "3",
+     "required": false
+    },
     "FINISHED_PROGRESS_STR": {
       "description": "should be a single character.",
       "required": false

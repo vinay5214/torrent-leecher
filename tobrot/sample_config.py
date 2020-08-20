@@ -57,6 +57,11 @@ class Config(object):
         "MAX_TG_SPLIT_FILE_SIZE",
         1900000000
     ))
+    # Maximum number of allowed downloads at a single time
+    MAX_CONCURRENT_DOWNLOADS = int(get_config(
+        "MAX_CONCURRENT_DOWNLOADS",
+        3
+    ))
     # add config vars for the display progress
     FINISHED_PROGRESS_STR = get_config("FINISHED_PROGRESS_STR", "█")
     UN_FINISHED_PROGRESS_STR = get_config("UN_FINISHED_PROGRESS_STR", "░")

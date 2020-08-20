@@ -21,6 +21,7 @@ from tobrot.helper_funcs.create_compressed_archive import create_archive
 from tobrot import (
     ARIA_TWO_STARTED_PORT,
     MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START,
+    MAX_CONCURRENT_DOWNLOADS,
     AUTH_CHANNEL,
     DOWNLOAD_LOCATION,
     EDIT_SLEEP_TIME_OUT,
@@ -43,12 +44,13 @@ async def aria_start():
     aria2_daemon_start_cmd.append("--rpc-max-request-size=1024M")
     aria2_daemon_start_cmd.append(f"--rpc-listen-port={ARIA_TWO_STARTED_PORT}")
     aria2_daemon_start_cmd.append(f"--bt-stop-timeout={MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START}")
+    aria2_daemon_start_cmd.append(f"--max-concurrent-downloads={MAX_CONCURRENT_DOWNLOADS}")
     # aria2_daemon_start_cmd.append(f"--dir={DOWNLOAD_LOCATION}")
     # TODO: this does not work, need to investigate this.
     # but for now, https://t.me/TrollVoiceBot?start=858
     #
     # added support for external config file
-    # now located at /usr/src/ariac/aria2.conf
+    # now located at /app/aria2/aria2.conf
     aria2_daemon_start_cmd.append("--conf-path=/app/aria2/aria2.conf")
     #
     LOGGER.info(aria2_daemon_start_cmd)
@@ -274,6 +276,13 @@ async def call_apropriate_function(
     )
     return True, None
 
+async def check_stat_us(aria2, gid):
+    download = aria2.get_download(gid)
+    if download.is_active:
+        status = "Downloading"
+    elif download.is_waiting:
+        status = "Queued"
+    return status
 
 # https://github.com/jaskaranSM/UniBorg/blob/6d35cf452bce1204613929d4da7530058785b6b1/stdplugins/aria.py#L136-L164
 async def check_progress_for_dl(aria2, gid, event, previous_message):
@@ -294,7 +303,9 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 except:
                     pass
                 #
-                msg = f"\n<b>Downloading...</b> \n<i>{downloading_dir_name}</i>"
+                msg = f"\nName: <i>{downloading_dir_name}</i>"
+                status = await check_stat_us(aria2, gid)
+                msg += f"\nStatus: {status}"
                 msg += f"\nProgress: {file.progress_string()} of "\
                     f"<b>{file.total_length_string()}</b> at "\
                     f"{file.download_speed_string()}, "\
