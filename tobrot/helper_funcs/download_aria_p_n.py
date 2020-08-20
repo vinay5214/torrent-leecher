@@ -314,7 +314,7 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                     msg += f"<b>C: {file.connections} |</b>"
                     if file.seeder is False:
                         msg += f"| <b>S: {file.num_seeders}</b>"
-                        msg += f"\n<code>/cancel {gid}</code>"
+                msg += f"\n<code>/cancel {gid}</code>"
                 # LOGGER.info(msg)
                 if msg != previous_message:
                     await event.edit(msg)
