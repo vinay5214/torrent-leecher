@@ -69,9 +69,19 @@ class Config(object):
     TG_OFFENSIVE_API = get_config("TG_OFFENSIVE_API", None)
     # URL for the rclone configuration
     R_CLONE_CONF_URI = get_config("R_CLONE_CONF_URI", None)
-    # Destination folder for rclone copied file
+    # Destination folder for the rclone
     R_CLONE_DEST = get_config("R_CLONE_DEST", "/PublicLeech")
     # because, https://t.me/c/1494623325/5603
     SHOULD_USE_BUTTONS = get_config("SHOULD_USE_BUTTONS", False)
-    # 
+    #
     LOG_FILE_ZZGEVC = get_config("LOG_FILE_ZZGEVC", "PublicLeech.log")
+    #
+    SP_LIT_ALGO_RITH_M = get_config(
+        "SP_LIT_ALGO_RITH_M",
+        "hjs"
+    )
+    #
+    DIS_ABLE_ST_GFC_COMMAND_I = get_config(
+        "DIS_ABLE_ST_GFC_COMMAND_I",
+        False
+    )
