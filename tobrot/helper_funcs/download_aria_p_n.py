@@ -39,6 +39,10 @@ async def aria_start():
     # start the daemon, aria2c command
     aria2_daemon_start_cmd.append("aria2c")
     aria2_daemon_start_cmd.append("--daemon=true")
+    # aria2_daemon_start_cmd.append(f"--dir={DOWNLOAD_LOCATION}")
+    # TODO: this does not work, need to investigate this.
+    # but for now, https://t.me/TrollVoiceBot?start=858
+    # maybe, :\ but https://t.me/c/1374712761/1142
     aria2_daemon_start_cmd.append("--enable-rpc")
     aria2_daemon_start_cmd.append("--rpc-listen-all=false")
     aria2_daemon_start_cmd.append("--rpc-max-request-size=1024M")
@@ -75,14 +79,14 @@ async def aria_start():
 
 def add_magnet(aria_instance, magnetic_link, c_file_name):
     options = None
-    # if c_file_name is not None:
-    #     options = {
-    #         "dir": c_file_name
-    #     }
+    if c_file_name is not None:
+        options = {
+            "dir": c_file_name
+        }
     try:
         download = aria_instance.add_magnet(
             magnetic_link,
-            options=options
+            options
         )
     except Exception as e:
         return False, "**FAILED** \n" + str(e) + " \nPlease do not send SLOW links. Read /help"
@@ -112,16 +116,16 @@ def add_torrent(aria_instance, torrent_file_path):
 
 def add_url(aria_instance, text_url, c_file_name):
     options = None
-    # if c_file_name is not None:
-    #     options = {
-    #         "dir": c_file_name
-    #     }
+    if c_file_name is not None:
+        options = {
+            "dir": c_file_name
+        }
     uris = [text_url]
     # Add URL Into Queue
     try:
         download = aria_instance.add_uris(
             uris,
-            options=options
+            options
         )
     except Exception as e:
         return False, "**FAILED** \n" + str(e) + " \nPlease do not send SLOW links. Read /help"
@@ -282,6 +286,7 @@ async def call_apropriate_function(
     )
     return True, None
 
+
 async def check_stat_us(aria2, gid):
     download = aria2.get_download(gid)
     if download.is_active:
@@ -289,6 +294,7 @@ async def check_stat_us(aria2, gid):
     elif download.is_waiting:
         status = "Queued"
     return status
+
 
 # https://github.com/jaskaranSM/UniBorg/blob/6d35cf452bce1204613929d4da7530058785b6b1/stdplugins/aria.py#L136-L164
 async def check_progress_for_dl(aria2, gid, event, previous_message):
@@ -309,7 +315,7 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
                 except:
                     pass
                 #
-                msg = f"\nName: <i>{downloading_dir_name}</i>"
+                msg = f"\nFileName: <i>{downloading_dir_name}</i>"
                 status = await check_stat_us(aria2, gid)
                 msg += f"\nStatus: <i>{status}</i>"
                 if file.is_active:
@@ -334,14 +340,21 @@ async def check_progress_for_dl(aria2, gid, event, previous_message):
         else:
             await event.edit(f"File Downloaded Successfully: <code>{file.name}</code>")
             return True
+    except aria2p.client.ClientException:
+        pass
+    except RecursionError:
+        file.remove(force=True)
+        await event.edit(
+            "Download Auto Canceled :\n\n"
+            "Your Torrent/Link is Dead.".format(
+                file.name
+            )
+        )
+        return False
     except Exception as e:
         LOGGER.info(str(e))
         if " not found" in str(e) or "'file'" in str(e):
             await event.edit("Download Canceled :\n<code>{}</code>".format(file.name))
-            return False
-        elif " depth exceeded" in str(e):
-            file.remove(force=True)
-            await event.edit("Download Auto Canceled :\n<code>{}</code>\nYour Torrent/Link is Dead.".format(file.name))
             return False
         else:
             LOGGER.info(str(e))
